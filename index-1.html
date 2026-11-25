@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BaultSafe: gestor de archivos y panel de seguridad local.">
+    <meta name="theme-color" content="#090d1c">
+    <title>BaultSafe | Almacenamiento seguro</title>
+    <link rel="stylesheet" href="style.css">
+    <script id="baultsafe-data" type="application/json">
+      {
+        "usuarios_seguridad_informatica": [
+          {
+            "nombre": "Kevin Mitnick",
+            "id": "1001",
+            "clave_acceso": "58314",
+            "area_especializacion": "Consultoría en ciberseguridad e ingeniería social"
+          },
+          {
+            "nombre": "Troy Hunt",
+            "id": "1002",
+            "clave_acceso": "27491",
+            "area_especializacion": "Seguridad web y divulgación de vulnerabilidades"
+          },
+          {
+            "nombre": "Steve Gibson",
+            "id": "1003",
+            "clave_acceso": "71628",
+            "area_especializacion": "Investigación en ciberseguridad y software de seguridad"
+          },
+          {
+            "nombre": "Brian Krebs",
+            "id": "1004",
+            "clave_acceso": "43905",
+            "area_especializacion": "Investigación y periodismo sobre ciberdelincuencia"
+          }
+        ],
+        "usuarios_desarrollo_y_redes": [
+          {
+            "nombre": "Bill Gates",
+            "id": "2001",
+            "clave_acceso": "86247",
+            "area_especializacion": "Desarrollo de software y sistemas operativos"
+          },
+          {
+            "nombre": "Steve Jobs",
+            "id": "2002",
+            "clave_acceso": "35186",
+            "area_especializacion": "Diseño de productos y tecnología informática"
+          },
+          {
+            "nombre": "Ken Thompson",
+            "id": "2003",
+            "clave_acceso": "92530",
+            "area_especializacion": "Sistemas operativos y desarrollo de Unix"
+          },
+          {
+            "nombre": "Dennis Ritchie",
+            "id": "2004",
+            "clave_acceso": "64812",
+            "area_especializacion": "Lenguajes de programación y desarrollo del lenguaje C"
+          }
+        ],
+        "historial_accesos": []
+      }
+    </script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <section id="login-screen" class="login-screen">
+      <div class="login-showcase">
+        <a class="brand brand-large" href="#" aria-label="BaultSafe, inicio">
+          <span class="brand-mark" aria-hidden="true">B</span>
+          <span>Bault<span class="brand-accent">Safe</span></span>
+        </a>
+        <div class="showcase-copy">
+          <p class="eyebrow">Tu espacio digital</p>
+          <h1>Todo bajo control.<br><span>Todo en su lugar.</span></h1>
+          <p>Organiza tus archivos y consulta el estado de seguridad desde un solo lugar.</p>
+        </div>
+        <div class="showcase-orbit" aria-hidden="true">
+          <div class="orbit-ring orbit-ring-outer"></div>
+          <div class="orbit-ring orbit-ring-inner"></div>
+          <div class="orbit-glow"></div>
+          <div class="orbit-shield">B</div>
+          <span class="orbit-dot orbit-dot-one"></span>
+          <span class="orbit-dot orbit-dot-two"></span>
+        </div>
+        <p class="showcase-footnote">GESTIÓN LOCAL · DATOS DE ESTA SESIÓN</p>
+      </div>
+
+      <div class="login-side">
+        <div class="login-card">
+          <a class="brand brand-mobile" href="#" aria-label="BaultSafe, inicio">
+            <span class="brand-mark" aria-hidden="true">B</span>
+            <span>Bault<span class="brand-accent">Safe</span></span>
+          </a>
+          <div class="login-heading">
+            <p class="eyebrow">BIENVENIDO/A DE NUEVO</p>
+            <h2>Iniciar sesión</h2>
+            <p>Ingresa tus credenciales para entrar a tu espacio.</p>
+          </div>
+
+          <form id="access-form" class="access-form">
+            <label for="user-id">ID de usuario</label>
+            <div class="input-wrap">
+              <span class="input-symbol" aria-hidden="true">#</span>
+              <input id="user-id" name="userId" type="text" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" placeholder="Ej. 1001" autocomplete="username" required>
+            </div>
+
+            <label for="user-name">Nombre completo</label>
+            <div class="input-wrap">
+              <span class="input-symbol" aria-hidden="true">◎</span>
+              <input id="user-name" name="userName" type="text" placeholder="Tu nombre" autocomplete="name" required>
+            </div>
+
+            <label for="access-key">Clave de acceso</label>
+            <div class="input-wrap">
+              <span class="input-symbol" aria-hidden="true">✳</span>
+              <input id="access-key" name="key" type="password" inputmode="numeric" pattern="[0-9]{5}" minlength="5" maxlength="5" placeholder="5 dígitos" autocomplete="off" required>
+            </div>
+
+            <button id="login-button" class="button button-primary login-button" type="submit">
+              <span>Entrar a BaultSafe</span><span aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <p id="status" class="status" role="alert" aria-live="assertive">Conectando de forma local…</p>
+          <p class="local-warning"><span aria-hidden="true">ⓘ</span> Las credenciales están visibles en el HTML y no deben usarse para proteger información real.</p>
+        </div>
+        <p class="login-copyright">© 2026 BaultSafe · Acceso local</p>
+      </div>
+    </section>
+
+    <div id="app-shell" class="app-shell" hidden>
+      <aside class="sidebar">
+        <a class="brand sidebar-brand" href="#" aria-label="BaultSafe">
+          <span class="brand-mark" aria-hidden="true">B</span>
+          <span>Bault<span class="brand-accent">Safe</span></span>
+        </a>
+
+        <p class="nav-label">ESPACIO DE TRABAJO</p>
+        <nav class="side-nav" aria-label="Navegación principal">
+          <button class="nav-item is-active" type="button" data-view="files-view">
+            <span class="nav-icon" aria-hidden="true">▤</span><span>Mis archivos</span>
+          </button>
+          <button class="nav-item" type="button" data-view="security-view">
+            <span class="nav-icon" aria-hidden="true">⬡</span><span>Seguridad</span>
+            <span class="nav-indicator" aria-hidden="true"></span>
+          </button>
+          <button class="nav-item" type="button" data-view="history-view">
+            <span class="nav-icon" aria-hidden="true">◷</span><span>Registros</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="local-chip"><span class="pulse-dot"></span> SESIÓN LOCAL</div>
+          <button id="logout-button" class="logout-button" type="button">
+            <span aria-hidden="true">↪</span> Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      <main class="app-main">
+        <header class="topbar">
+          <div class="breadcrumb"><span>BaultSafe</span><span aria-hidden="true">/</span><strong id="current-section">Mis archivos</strong></div>
+          <div class="topbar-actions">
+            <div class="profile-chip">
+              <span id="profile-avatar" class="avatar">U</span>
+              <span id="profile-name" class="profile-name">Usuario</span>
+              <span class="profile-caret" aria-hidden="true">⌄</span>
+            </div>
+          </div>
+        </header>
+
+        <section id="files-view" class="view content-view">
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">TU ESPACIO PERSONAL</p>
+              <h1>Mis archivos</h1>
+              <p class="view-subtitle">Organiza y encuentra tus documentos en un solo lugar.</p>
+            </div>
+            <button id="add-files-button" class="button button-primary add-files-button" type="button">
+              <span class="add-icon" aria-hidden="true">＋</span> Añadir archivos
+            </button>
+            <input id="file-picker" type="file" multiple hidden>
+          </div>
+
+          <div class="stat-strip">
+            <article class="mini-stat">
+              <span class="mini-stat-icon icon-violet" aria-hidden="true">▤</span>
+              <span><strong id="file-count">0</strong><small>Archivos guardados</small></span>
+            </article>
+            <article class="mini-stat">
+              <span class="mini-stat-icon icon-blue" aria-hidden="true">◈</span>
+              <span><strong id="file-total-size">0 B</strong><small>Espacio usado</small></span>
+            </article>
+            <article class="mini-stat">
+              <span class="mini-stat-icon icon-green" aria-hidden="true">✓</span>
+              <span><strong>Almacenamiento local</strong><small>Guardados en este dispositivo</small></span>
+            </article>
+          </div>
+
+          <section class="file-panel" aria-labelledby="file-panel-heading">
+            <div class="file-panel-header">
+              <div>
+                <h2 id="file-panel-heading">Todos los archivos</h2>
+                <p id="file-summary">Tus archivos añadidos aparecerán aquí.</p>
+              </div>
+              <div class="file-controls">
+                <label class="search-box">
+                  <span aria-hidden="true">⌕</span>
+                  <span class="visually-hidden">Buscar archivos</span>
+                  <input id="file-search" type="search" placeholder="Buscar archivos…">
+                </label>
+                <label class="sort-control">
+                  <span>Ordenar:</span>
+                  <select id="sort-files" aria-label="Ordenar archivos">
+                    <option value="az">Nombre (A–Z)</option>
+                    <option value="za">Nombre (Z–A)</option>
+                    <option value="number-asc">Número (menor a mayor)</option>
+                    <option value="number-desc">Número (mayor a menor)</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <div class="file-column-head" aria-hidden="true">
+              <span>ARCHIVO</span><span>TAMAÑO</span><span>CLASIFICACIÓN</span><span>RELEVANCIA</span><span>REVISAR</span><span></span>
+            </div>
+            <div id="file-list" class="file-list"></div>
+          </section>
+
+          <p class="session-footnote"><span aria-hidden="true">ⓘ</span> Los archivos y su contenido se guardan en este navegador y no se suben a ningún servidor.</p>
+        </section>
+
+        <section id="security-view" class="view content-view" hidden>
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">CENTRO DE PROTECCIÓN</p>
+              <h1>Seguridad</h1>
+              <p class="view-subtitle">Consulta el estado de los indicadores de seguridad.</p>
+            </div>
+          </div>
+
+          <div class="security-banner">
+            <span class="banner-icon" aria-hidden="true">✧</span>
+            <div><strong>Protección del dispositivo no disponible</strong><p>Esta página no analiza el equipo ni reemplaza un antivirus o firewall real.</p></div>
+            <span class="local-chip"><span class="pulse-dot"></span> INDICADOR VISUAL</span>
+          </div>
+
+          <div class="security-grid">
+            <article class="security-card risk-card">
+              <div class="security-card-heading">
+                <span class="security-icon risk-icon" aria-hidden="true">⌁</span>
+                <span id="file-scan-pill" class="status-pill status-neutral"><span></span> Pendiente</span>
+              </div>
+              <p class="eyebrow">ESTADO DE LOS ARCHIVOS</p>
+              <h2 id="file-scan-title">Revisión de archivos</h2>
+              <p id="file-scan-description">Genera resultados de ejemplo para ver cómo se mostrarían los estados. No se lee el contenido de los archivos.</p>
+              <div class="security-detail"><span>Archivos seleccionados</span><strong id="security-file-count">0</strong></div>
+              <div class="security-detail"><span>Comprobación real</span><strong>No disponible</strong></div>
+              <button id="run-file-scan" class="button button-secondary scan-button" type="button">Generar resultados de ejemplo</button>
+              <div id="file-scan-results" class="file-scan-results" aria-live="polite"></div>
+            </article>
+
+            <article class="security-card firewall-card">
+              <div class="security-card-heading">
+                <span class="security-icon firewall-icon" aria-hidden="true">⬡</span>
+                <span id="firewall-pill" class="status-pill status-off"><span></span> Inactivo</span>
+              </div>
+              <p class="eyebrow">INDICADOR DE FIREWALL</p>
+              <h2 id="firewall-title">Indicador de firewall</h2>
+              <p id="firewall-description">Activa el indicador para ver su estado y tiempo de actividad.</p>
+              <div class="firewall-control">
+                <button id="firewall-toggle" class="firewall-button" type="button" aria-pressed="false">
+                  <span class="firewall-button-inner"><span id="firewall-symbol" aria-hidden="true">⏻</span></span>
+                  <span id="firewall-button-label">Levantar firewall</span>
+                </button>
+                <div class="uptime">
+                  <span>TIEMPO ACTIVO</span>
+                  <strong id="firewall-timer">00:00:00</strong>
+                </div>
+              </div>
+              <p class="firewall-disclaimer">Este control solo cambia la interfaz; no modifica el firewall de Windows.</p>
+            </article>
+          </div>
+
+          <section class="file-panel firewall-history-panel" aria-labelledby="firewall-history-heading">
+            <div class="file-panel-header">
+              <div>
+                <h2 id="firewall-history-heading">Registro de defensa del firewall</h2>
+                <p id="firewall-history-summary">0 registros</p>
+              </div>
+            </div>
+            <div id="firewall-history-list" aria-live="polite"></div>
+          </section>
+        </section>
+
+        <section id="history-view" class="view content-view" hidden>
+          <div class="view-heading">
+            <div>
+              <p class="eyebrow">REGISTRO LOCAL</p>
+              <h1>Registros de acceso</h1>
+              <p class="view-subtitle">Consulta quién inició sesión y cuándo lo hizo.</p>
+            </div>
+          </div>
+          <section class="file-panel history-panel" aria-labelledby="history-heading">
+            <div class="file-panel-header history-header">
+              <div><h2 id="history-heading">Inicios de sesión</h2><p>Usuario, ID, fecha y hora de cada acceso desde este navegador.</p></div>
+            </div>
+            <div id="access-history"></div>
+          </section>
+        </section>
+
+        <footer class="app-footer">BaultSafe <span>·</span> Los resultados de seguridad de esta página son ilustrativos, no un análisis real.</footer>
+      </main>
+    </div>
+
+    <dialog id="file-add-dialog" class="manager-dialog file-add-dialog" aria-labelledby="file-add-title">
+      <form id="file-add-form" method="dialog">
+        <header class="dialog-header">
+          <div>
+            <p class="eyebrow">NUEVOS DOCUMENTOS</p>
+            <h2 id="file-add-title">Clasifica tus archivos</h2>
+          </div>
+          <button class="dialog-close" type="button" data-close-dialog="file-add-dialog" aria-label="Cerrar">×</button>
+        </header>
+        <p class="dialog-description">Asigna una clasificación a cada archivo antes de añadirlo al gestor.</p>
+        <div id="file-add-list" class="file-add-list"></div>
+        <footer class="dialog-actions">
+          <button class="button button-ghost" type="button" data-close-dialog="file-add-dialog">Cancelar</button>
+          <button class="button button-primary" type="submit">Añadir al gestor</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog id="file-preview-dialog" class="manager-dialog file-preview-dialog" aria-labelledby="file-preview-title">
+      <header class="dialog-header preview-header">
+        <div class="preview-title-wrap">
+          <span id="file-preview-icon" class="file-preview-icon">FILE</span>
+          <div>
+            <p class="eyebrow">VISUALIZADOR LOCAL</p>
+            <h2 id="file-preview-title">Archivo</h2>
+          </div>
+        </div>
+        <button class="dialog-close" type="button" data-close-dialog="file-preview-dialog" aria-label="Cerrar">×</button>
+      </header>
+      <div id="file-preview-meta" class="file-preview-meta"></div>
+      <div id="file-preview-content" class="file-preview-content"></div>
+      <footer class="dialog-actions preview-actions">
+        <button id="file-preview-download" class="button button-secondary" type="button">Abrir / descargar</button>
+        <button class="button button-ghost" type="button" data-close-dialog="file-preview-dialog">Cerrar</button>
+      </footer>
+    </dialog>
+
+    <datalist id="file-classifications">
+      <option value="Personal"></option>
+      <option value="Trabajo"></option>
+      <option value="Académico"></option>
+      <option value="Financiero"></option>
+      <option value="Legal"></option>
+      <option value="Técnico"></option>
+      <option value="Imágenes"></option>
+      <option value="Otro"></option>
+    </datalist>
+  </body>
+</html>

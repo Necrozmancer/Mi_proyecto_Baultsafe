@@ -1,0 +1,55 @@
+{
+  "usuarios_seguridad_informatica": [
+    {
+      "nombre": "Kevin Mitnick",
+      "id": "1001",
+      "clave_acceso": "58314",
+      "area_especializacion": "Consultoría en ciberseguridad e ingeniería social"
+    },
+    {
+      "nombre": "Troy Hunt",
+      "id": "1002",
+      "clave_acceso": "27491",
+      "area_especializacion": "Seguridad web y divulgación de vulnerabilidades"
+    },
+    {
+      "nombre": "Steve Gibson",
+      "id": "1003",
+      "clave_acceso": "71628",
+      "area_especializacion": "Investigación en ciberseguridad y software de seguridad"
+    },
+    {
+      "nombre": "Brian Krebs",
+      "id": "1004",
+      "clave_acceso": "43905",
+      "area_especializacion": "Investigación y periodismo sobre ciberdelincuencia"
+    }
+  ],
+  "usuarios_desarrollo_y_redes": [
+    {
+      "nombre": "Bill Gates",
+      "id": "2001",
+      "clave_acceso": "86247",
+      "area_especializacion": "Desarrollo de software y sistemas operativos"
+    },
+    {
+      "nombre": "Steve Jobs",
+      "id": "2002",
+      "clave_acceso": "35186",
+      "area_especializacion": "Diseño de productos y tecnología informática"
+    },
+    {
+      "nombre": "Ken Thompson",
+      "id": "2003",
+      "clave_acceso": "92530",
+      "area_especializacion": "Sistemas operativos y desarrollo de Unix"
+    },
+    {
+      "nombre": "Dennis Ritchie",
+      "id": "2004",
+      "clave_acceso": "64812",
+      "area_especializacion": "Lenguajes de programación y desarrollo del lenguaje C"
+    }
+  ],
+  "historial_accesos": []
+}
